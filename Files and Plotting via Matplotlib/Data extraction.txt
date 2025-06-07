@@ -1,0 +1,74 @@
+import json
+import check
+frodo = {'measurements':
+     [('Shire', 7.3, '3018-04-12'),
+      ('Lothlórien', 33.5, '3019-02-14'),
+      ('Shire', 14.7, '3018-09-23'),
+      ('Lothlórien', 81.5, '3019-02-18'),
+      ('Mordor', 11.9, '3019-03-25'),
+      ('Rivendell', 23.9, '3018-12-25'),
+      ('Lothlórien', 12.8, '3019-02-19'),
+     ],
+     'sites':
+     {'Lothlórien': (77.19, 2.43),
+      'Rivendell': (31.74, 40.6),
+      'Bree': (35.04, 30.33),
+      'Mordor': (65.55, 21.87),
+      'Khazad-dûm': (6.01, 43.37),
+      'Shire': (12.02, 4.15),}}
+harrypotter = {'measurements':
+     [('Phoenix', 11.0, '1980-07-31'),
+      ('Slug', 14.3, '1980-03-01'),
+      ('Holly', 10.6, '1979-09-19'),
+      ('Owl', 129.8, '2008-04-17'),],
+     'sites':
+     {'Phoenix': (426.1, 54.43),
+      'Slug': (10.32, 774.2),
+      'Holly': (237.4, 33.3),
+      'Owl': (656.1,277.0)}}
+zodiacs = {'measurements':
+     [('Cancer', 10.9, '2005-07-11'),
+      ('Virgo', 16.8, '2005-08-31'),
+      ('Aquarius', 8.8, '2005-01-21'),
+      ('Gemini', 17.3, '2005-05-27'),],
+     'sites':
+     {'Cancer': (5.55, 8.0812),
+      'Virgo': (77.56, 23.3),
+      'Aquarius': (32.0, 167.8),
+      'Gemini': (21.23,85.6)}}
+with open('frodo.json', 'w') as jfile:
+    json.dump(frodo, jfile)
+with open("harrypotter.json", 'w') as jfile:
+    json.dump(harrypotter, jfile)
+with open("zodiacs.json", "w") as jfile:
+    json.dump(zodiacs, jfile)
+## Define your function here.
+def helper_date(date:tuple[float, float, str,float]) -> str:
+    """When given data, date, in the form of a tuple with all values as floats except for the value in
+    the second position being a string, return the string."""
+    return date[2]
+check.expect("helpertest1", helper_date((77.19, 2.43, '3019-02-19', 12.8)), '3019-02-19')
+check.expect("helpertest2", helper_date((2334.32, 0.3284, '823984289', 0.213)), '823984289')
+def make_table(filename: str) -> list[tuple[float, float, str, float]]:
+    """When given the name of a file, filename, that contains data in JSON format,
+    return a list that contains tuples of x-coordinate, y-coordinate, date, and measurement data for each measurement."""
+    with open(filename, 'r') as jfile:
+        data = json.load(jfile)
+        data_list = []
+        for measurements in data['measurements']:
+            site_name, value, date = measurements
+            if site_name in data['sites']:
+                x, y = data['sites'][site_name]
+            data_list.append((x, y, date, value))
+        return sorted(data_list, key=helper_date)
+        
+check.expect("Frodo", make_table('frodo.json'),[(12.02, 4.15, '3018-04-12', 7.3), (12.02, 4.15, '3018-09-23', 14.7),
+              (31.74, 40.6, '3018-12-25', 23.9),
+              (77.19, 2.43, '3019-02-14', 33.5),
+              (77.19, 2.43, '3019-02-18', 81.5),
+              (77.19, 2.43, '3019-02-19', 12.8),
+              (65.55, 21.87, '3019-03-25', 11.9)])
+check.expect("test1", make_table('harrypotter.json'), [(237.4, 33.3,'1979-09-19',10.6), (10.32, 774.2,'1980-03-01',14.3), 
+            (426.1, 54.43, '1980-07-31',11.0), (656.1,277.0,'2008-04-17',129.8)])
+check.expect("test2", make_table('zodiacs.json'), [(32.0, 167.8, '2005-01-21', 8.8), (21.23,85.6, '2005-05-27', 17.3), 
+            (5.55, 8.0812, '2005-07-11', 10.9), (77.56, 23.3, '2005-08-31', 16.8)])
