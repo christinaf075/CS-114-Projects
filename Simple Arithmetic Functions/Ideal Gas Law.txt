@@ -4,3 +4,9 @@ def volume(pressure:float, amount:float, temperature:float) -> float:
     volume = amount*R*temperature/pressure
     print("The volume is", volume, "m**3")
     return volume
+
+check.within("test1", volume(100.0, 3.5, 298.0), 86.71502, 0.0001)
+check.within("test2", volume(111.0, 7.1, 300.0), 159.5389, 0.0001)
+check.within("test3", volume(125.0, 12.1, 256.0), 206.0275, 0.0001)
+check.within("one", volume(1.0, 1.0, 1.0), 8.314, 0.0001)
+check.within("two", volume(1.0, 1.0, 100.0), 831.4, 0.0001)
