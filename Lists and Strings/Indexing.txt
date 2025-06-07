@@ -1,0 +1,25 @@
+import check
+def nix_evens(lst: list[int]) -> None:
+    """Mutates a list, lst, so that for any value in lst, if the sum of its index and its value is even, 
+    it is removed from the list."""
+    index = len(lst) - 1
+    while index >= 0:
+        if (index + lst[index]) % 2 == 0:
+            lst.pop(index)
+        index = index-1
+    print(lst)
+jvj = [2,4,6,0,1]
+check.expect("nix:0r", nix_evens(jvj), None)
+check.expect("nix:0m", jvj, [4,0,1])
+
+nums = [7,6,7,8,9,6,6,7,9,8]
+check.expect("nix:1r", nix_evens(nums), None)
+check.expect("nix:1m", nums, [7,6,7,8,9,6,9,8])
+
+more_numbers = [82, 3, 0, 23]
+check.expect("test1", nix_evens(more_numbers), None)
+check.expect("test1", more_numbers, [])
+
+negative_numbers = [-45, -100, 9, -57]
+check.expect("test2", nix_evens(negative_numbers), None)
+check.expect("test2", negative_numbers, [-45, -100, 9]) 
