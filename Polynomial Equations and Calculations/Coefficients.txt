@@ -1,0 +1,101 @@
+import check
+class Polynomial:
+    """Describe polynomial coefficients."""
+    coefficients: list[float]
+    new_sum : np.ndarray
+    def __init__(self, coefficients: list[float]):
+        self.coefficients = coefficients
+    def __repr__(self) -> str:
+        return str(self.coefficients)
+    def __eq__(self, other: any) -> bool:
+        return (isinstance(other, Polynomial) and self.coefficients == other.coefficients)
+    def call_polynomial(self) -> Polynomial:
+        """Return a list of the coefficient values."""
+        return self
+    def __repr__(self) -> str:
+        """Generate the polynomial string."""
+        terms = []
+        for index in range(len(self.coefficients)):
+            if self.coefficients[index] != 0:
+                term = str(float(self.coefficients[index]))
+                if index > 0:
+                    if self.coefficients[index] == 1:
+                        term = "x"
+                    else:
+                        term = term + "*x"
+                    if index > 1:
+                        term = term + "**" + str(index)
+                terms.append(term)
+        polynomial_str = ""
+        if terms:
+            polynomial_str = terms[0]
+            for term in terms[1:]:
+                polynomial_str = polynomial_str + " + " + term
+        else:
+            polynomial_str = "0.0"
+        return "{" + polynomial_str + "}"
+    def __add__(self, other: "Polynomial") -> "Polynomial":
+        """Add coefficient objects of class together to create a new object of the same class."""
+        length_self = len(self.coefficients)
+        length_other = len(other.coefficients)
+        if length_self < length_other:
+            min_length = length_self
+        else:
+            min_length = length_other
+        summed_coeffs = []
+        for i in range(min_length):
+            summed_coeffs.append(self.coefficients[i] + other.coefficients[i])
+        if length_self < length_other:
+            summed_coeffs = summed_coeffs + other.coefficients[min_length:]
+        elif length_self > length_other:
+            summed_coeffs = summed_coeffs + self.coefficients[min_length:]
+        return Polynomial(summed_coeffs)
+    def evalf(self, xvalue: float) -> float:
+        """Takes a Polynomial object and an xvalue, and returns the value of the polynomial at that xvalue."""
+        result = 0
+        power = 1
+        for coeff in self.coefficients:
+            result = result + coeff*power
+            power = power*xvalue
+        return result
+l0 = [2.0, 3.0, 4.0]
+l1 = [2.0, 3.0, 4.0]
+p0 = Polynomial(l0)
+p1 = Polynomial(l1)
+check.expect("equal0", p0 == p1, True)
+check.expect("equal1", p0 == [2.0, 3.0, 4.0], False)
+check.expect("equal2", p0 == Polynomial([3.0]), False)
+l0.append(5.0)
+check.expect("alias?", p0 == p1, True)
+check.expect("mutate?", l1, [2.0, 3.0, 4.0])
+
+check.expect("appearance0", str(p1), "{2.0 + 3.0*x + 4.0*x**2}")
+check.expect("appearance1", str(Polynomial([0.0])), "{0.0}")
+check.expect("appearance2", str(Polynomial([])), "{0.0}")
+check.expect("appearance3", str(Polynomial([2, 4, 6, 0, 1])),
+             "{2.0 + 4.0*x + 6.0*x**2 + x**4}")
+check.expect("appearance4", str(Polynomial([0, 0, 0, 0, 5.0, 1.0])),
+             "{5.0*x**4 + x**5}")
+check.expect("appearance5", str(Polynomial([3,2.0, 1])), "{3.0 + 2.0*x + x**2}")
+check.expect("appearance6", str(Polynomial([0, 1.1, 0, 0, 0, 4])), "{1.1*x + 4.0*x**5}") 
+check.expect("add0", Polynomial([2.0]) + Polynomial([3.0]),
+             Polynomial([5.0]))
+check.expect("add1",
+             Polynomial([2.0, 1.5]) + Polynomial([0.0, 0.1, 1.7]),
+             Polynomial([2.0, 1.6, 1.7]))
+check.expect("keepadding", Polynomial([3.3])+Polynomial([1.2]), Polynomial([4.5]))
+check.within("justkeepadding", Polynomial([1.0,2.3])+Polynomial([-0.2]), Polynomial([0.8, 2.3]), 0.0001)
+
+line = Polynomial([2.5, 3.2])
+check.within("evalf0", line.evalf(0.0), 2.5, 0.0001)
+check.within("evalf1", line.evalf(1.0), 5.7, 0.0001)
+
+s = Polynomial([3.0, 2.0, 1.0])
+check.within("evalf2", s.evalf(1.5), 8.25, 0.0001)
+check.within("evalf3", s.evalf(2.0), 11.0, 0.0001)
+
+nomore = Polynomial([7.7, 1.0])
+check.within("evalf4", nomore.evalf(0.5), 8.2, 0.0001)
+
+sosad = Polynomial([-1.5, 2.3, 0.0])
+check.within("evalf5", sosad.evalf(1.0), 0.8, 0.0001)
