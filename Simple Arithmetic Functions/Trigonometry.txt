@@ -4,3 +4,8 @@ def height(ship_length:float, bow_angle:float, stern_angle:float) -> float:
     height = -1*ship_length*math.tan(stern_angle)*math.tan(bow_angle)/(math.tan(stern_angle)-math.tan(bow_angle))
     print("The height of the target is", height, "m")
     return height
+
+check.within("test1", height(100.0, math.pi/6, math.pi/12), 50.0, 0.0001)
+check.within("test2", height(42.0, math.pi*2/6, math.pi/4), 99.373, 0.0001)
+check.within("test3", height(77.0, math.pi*5, math.pi/7), 0.0, 0.0001)
+check.within("backwards", height(43.6, math.pi/4, 0.6082915), 100.0, 0.0001)
