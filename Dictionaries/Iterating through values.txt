@@ -1,0 +1,43 @@
+import check
+def reversed_keys(key:str) -> str:
+    """When given a string, key, reverse it from back to front."""
+    return key[::-1]
+check.expect("testing1", reversed_keys("sadness"), "ssendas")
+check.expect("testing2", reversed_keys("readingweek"), "keewgnidaer")
+  
+def sort_values(dictionary: dict[str, any]) -> list:
+    """When given a dictionary, return a list of the values in the dictionary according to the 
+    order of its keys when arranged alphabetically when read from back to front."""
+    keys_list = []
+    sorted_keys = sorted(dictionary.keys(), key=reversed_keys)
+    for key in sorted_keys:
+        keys_list.append(dictionary[key])
+    return keys_list
+detectives = {
+    "Poirot": "Hercule",
+    "Fletcher": "Jessica",
+    "Marple": "Jane",
+    "Hardy": "Frank & Joe",
+    "Drew": "Nancy",
+    "Holmes": "Sherlock",
+}
+greek_gods = {
+    "Athena": "Wisdom",
+    "Poseidon": "Sea",
+    "Ares": "War",
+    "Zeus": "Sky",
+    "Hades": "Death",
+}
+canadian_unis = {
+    "Toronto": "Uoft",
+    "Hamilton": "McMaster",
+    "Waterloo": "Waterloo",
+    "Quebec": "McGill",
+    "London": "Western",
+}
+check.expect("sv:0", sort_values(detectives),
+             ['Jane', 'Jessica', 'Sherlock', 'Hercule', 'Nancy', 'Frank & Joe'])
+check.expect("test1", sort_values(greek_gods), 
+             [ "Wisdom", "Sea", "Death", "War", "Sky"])
+check.expect("test2", sort_values(canadian_unis), 
+             ["McGill", "Western", "McMaster", "Waterloo", "Uoft"])
