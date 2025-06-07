@@ -1,0 +1,53 @@
+import check
+def leetify(words: str) -> str:
+    """Take an existing string, words, and convert and return it into a new string based on Leetspeak."""
+    message = words.split() 
+    conversion = ""
+    for word in message:
+        index = 0
+        while index < len(word):
+            if word[index:index+3] == "AND":
+                conversion = conversion+"&"
+                index = index+3
+            elif word[index:index+2] == "ED":
+                if index+2 == len(word):
+                    conversion = conversion + "'D"
+                    index = index+2
+                else:
+                    conversion = conversion + "3D"
+                    index = index+2
+            elif word[index:index+1] == "M":
+                conversion = conversion + "/V|"
+                index = index+1
+            elif word[index:index+1] == "A":
+                conversion = conversion+ "4"
+                index = index+1
+            elif word[index:index+1] == "E":
+                conversion = conversion + "3"
+                index = index+ 1
+            elif word[index:index+1] == "V":
+                conversion = conversion + "|/"
+                index = index+1
+            elif word[index:index+1] == "S":
+                conversion = conversion + "5"
+                index = index+1
+            elif word[index:index+1] == "H":
+                conversion = conversion + "[-]"
+                index = index+1
+            elif word[index:index+1] == "T":
+                conversion = conversion + "7"
+                index = index+1
+            elif word[index:index+1] == "L":
+                conversion = conversion + "1"
+                index = index+1
+            else: 
+                conversion = conversion+ word[index]
+                index = index+1
+        if word != message[-1]: 
+            conversion = conversion+ " "
+
+    return conversion
+check.expect("L:0",leetify("I CAN'T STAND LEETSPEAK, IT SHOULD BE BANNED"),"I C4N'7 57& 13375P34K, I7 5[-]OU1D B3 B4NN'D")
+check.expect("test1", leetify("SAVE"), "54|/3")
+check.expect("test2", leetify("EMBEDDED"), "3/V|B3DD'D")
+check.expect("test3", leetify("HAPPILY WEDDED COUPLE"), "[-]4PPI1Y W3DD'D COUP13")
