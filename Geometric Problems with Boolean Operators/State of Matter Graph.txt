@@ -1,0 +1,43 @@
+def f(u:float) -> float:
+    """Calculate and return the value of a when given the value u."""
+    a = 0.5942*u-173.5202
+    return a
+def g(v:float) -> float:
+    """Calculate and return the value of b when given the value v."""
+    b = -1.2696*v
+    return b
+def h(w:float) -> float:
+    """Calculate and return the value of c when given the value w."""
+    c = -118.2
+    return c
+def eutectic(pct_eth:float, temperature: float) -> str:
+    """Return the state of an eutectic mixture when given the ethanol percentage, pct_eth, and the temperature."""
+    x = f(pct_eth)
+    y = g(pct_eth)
+    if temperature <= -118.2:
+        return ("solid")
+    elif 0<= pct_eth <= 93.1:
+        if -118.2 < temperature <= y:
+            return ("slush")
+        elif temperature > y:
+            return ("liquid")
+    elif 93.1 < pct_eth <= 100:
+        if -118.2 < temperature <= x:
+            return ("slush")
+        elif temperature > x:
+            return ("liquid")
+
+check.expect("E1", eutectic(50, -140.0), "solid")
+check.expect("E2", eutectic(20.0,-90.0), "slush")
+check.expect("E3", eutectic(99.0, -117.0), "slush")
+check.expect("E4", eutectic(90.0, -10.0), "liquid")
+check.within("slushliquidline1", f(100.0), -114.1002, 0.0001)
+check.within("slushliquidline2", f(34.5), -153.0203, 0.0001)
+check.within("slushliquidline3", f(342.0), 29.6962, 0.0001)
+check.within("slushliquidlinea", g(95.6), -121.3737, 0.0001)
+check.within("slushliquidlineb", g(23.3), -29.5816, 0.0001)
+check.within("solidline1", h(45.9), -118.2, 0.0001)
+check.within("solidline2", h(980.2), -118.2, 0.0001)
+check.expect("mixture1", eutectic(50.0, -24.6), "liquid")
+check.expect("mixture2", eutectic(669.3, -118.2), "solid")
+check.expect("mixture3", eutectic(100.0, -114.1002), "slush")
