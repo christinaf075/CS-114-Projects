@@ -1,0 +1,10 @@
+def gravity(r:float, h:float, omega:float) -> float:
+    """Return gravity using a radius of r, height of h, and angular velocity of omega."""
+    gravity = omega**2*r**2/(2*h)
+    print("The pull of gravity is", gravity, "m/s**2")
+    return gravity
+
+check.within("test1", gravity(2.1, 0.0478, 1.0), 46.1297, 0.0001)
+check.within("test2", gravity(5.7, 3.2, 2.0), 20.3062, 0.0001)
+check.within("test3", gravity(10.0, 1.78, 0.4), 4.4943, 0.0001)
+check.within("G0", gravity(1.0, 0.05102, 1.0), 9.8, 0.0001)
