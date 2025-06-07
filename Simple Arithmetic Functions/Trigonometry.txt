@@ -1,0 +1,6 @@
+def height(ship_length:float, bow_angle:float, stern_angle:float) -> float:
+    """Return the height of a target above water, using the angle, bow_angle, it forms with the bow, 
+    the angle, stern_angle, it forms with the stern, and the ship_length."""
+    height = -1*ship_length*math.tan(stern_angle)*math.tan(bow_angle)/(math.tan(stern_angle)-math.tan(bow_angle))
+    print("The height of the target is", height, "m")
+    return height
