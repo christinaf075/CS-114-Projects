@@ -1,0 +1,48 @@
+import check
+def remove_val(d:dict[int, list[int]], target: int) -> list[int]:
+    """Mutates the dictionary, d, where items in the list are removed so that the list
+    does not start with a value divisible by the integer, target. Returns the list of
+    values that were removed."""
+    removed_items = []
+    first_value_in_list = 0
+    for number in d:
+        list_so_far = d[number][:]
+        while list_so_far and list_so_far[first_value_in_list]%target == 0:
+            x = list_so_far.pop(first_value_in_list)
+            removed_items.append(x)
+            d[number] = list_so_far
+    return removed_items
+    
+
+test0 = {7: [6, 12, 14, 9, 15, 7],
+         8: [30, 4],
+         9: [7, 7],
+         6: [3, 4, 3]}
+## Test return value:
+check.expect("RV0r", remove_val(test0, 3), [6, 12, 30, 3])
+## Test that we mutated properly:
+check.expect("RV0m", test0,
+             {7: [14, 9, 15, 7],
+              8: [4],
+              9: [7, 7],
+              6: [4, 3]})
+test1 = {7: [6, 12, 14, 9, 15, 7],
+         8: [30, 4],
+         9: [7, 7],
+         1: [],
+         6: [3, 4, 3]}
+## Test return value:
+check.expect("RV1r", remove_val(test1, 2), [6, 12, 14, 30, 4])
+## Test that we mutated properly:
+check.expect("RV1m", test1,
+             {7: [9, 15, 7],
+              8: [],
+              9: [7, 7],
+              1: [],
+              6: [3, 4, 3]})
+test2 = {4: [4,7,88,19], 75: [42,33,90,5], 21: [32, -10]}
+check.expect("test2deleted", remove_val(test2, 4), [4, 32])
+check.expect("test2remaining", test2, {4: [7, 88, 19], 75: [42, 33,90,5], 21:[-10]})
+test3 = {1: [22, 34, 55, 67], 21: [78, 66, 22, 10], 90: [-33, 192019, 222]}
+check.expect("test3deleted", remove_val(test3, 2), [22, 34, 78, 66, 22, 10])
+check.expect("test3remaining", test3, {1:[55, 67], 21: [], 90: [-33, 192019, 222]})
