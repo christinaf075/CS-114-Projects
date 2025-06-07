@@ -1,0 +1,48 @@
+import check
+l33t = { "M": "/V|",    "A": "4",    "E": "3",    "V": "|/",    "S": "5",
+    "L": "1",      "T": "7",    "H": "[-]",  "AND": "&",}
+what_the = {'el': '*',   'e': '_',   'ell': '?',   'le': '::'}
+gr2braille = {' AB ': ' ABOUT ', ' LL ': ' LITTLE ', ' TD ': ' TODAY ',
+           ' FR ': ' FRIEND ', ' LR ': ' LETTER ', ' W ': ' WILL ',}
+sadness = {"HAPPY": "SAD", "!": "/", "N": "M", "OT": "07"}
+spaces = {' N': "NO", " P L EASE": "PLEASE", "DEVIL": "!@#&!"}
+def helper(word: str, dictionary: dict[str, str]) -> str:
+    """Given a string, word, return the best prefix key from dictionary,
+    such that the word is as similar to key as can be. If there is no best
+    prefix, return the original word."""
+    new_word = ""
+    while word:
+        best_key = ""
+        for key in dictionary:
+            key_index = 0
+            index = 0
+            while index < len(word) and key_index < len(key) and word[index] == key[key_index]:
+                index = index+ 1
+                key_index =key_index + 1
+            if key_index == len(key) and len(key) > len(best_key):
+                best_key = key
+        if best_key:
+            new_word =new_word + dictionary[best_key]
+            word = word[len(best_key):]
+        else:
+            new_word = new_word+ word[0]
+            word = word[1:]
+    return new_word
+def translate(sentence: str, table: dict[str, str]) -> str:
+    """When given a sentence, transform and return the characters in the sentence
+    by replacing the characters that look like keys with their associated values in 
+    the given dictionary, table."""
+    return helper(sentence, table)
+check.expect("helpertest1", helper("SALVATION", l33t), "541|/47ION")
+check.expect("helpertest2", helper("DEVel P L EASE HEellLP", what_the), "DEV* P L EASE HE?LP")
+check.expect("L:0",
+             translate("I CAN'T STAND LEETSPEAK, IT SHOULD BE BANNED", l33t),
+             "I C4N'7 57& 13375P34K, I7 5[-]OU1D B3 B4NN3D")
+check.expect("L:1",
+             translate("Michaelangelo delicately relabelled the ukelele", what_the),
+             "Micha*ang*o d*icat*y r*ab?_d th_ uk**_")
+check.expect("L:1",
+             translate("I  W  SEND  MY  FR  A  LL  LR  TD ", gr2braille),
+             "I  WILL  SEND  MY  FRIEND  A  LITTLE  LETTER  TODAY ")
+check.expect("test1", translate("I'M SO NOT HAPPY !!! ", sadness), "I'M SO M07 SAD /// ")
+check.expect("test2", translate(" NO PLEASE YOU DEVIL", spaces), "NOO PLEASE YOU !@#&!")
