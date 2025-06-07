@@ -1,0 +1,6 @@
+def volume(pressure:float, amount:float, temperature:float) -> float:
+    """Using the ideal gas law, return the volume of gas using amount of moles at a given temperature, pressure, and constant R."""
+    R = 8.314
+    volume = amount*R*temperature/pressure
+    print("The volume is", volume, "m**3")
+    return volume
