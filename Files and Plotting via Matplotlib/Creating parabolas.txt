@@ -1,0 +1,55 @@
+import check
+import matplotlib.pyplot as plt
+import csv
+import numpy as np
+def find_sites(filename: str) -> tuple[float, float]:
+    """When given a CSV file, filename, use its x-column and y-column data as x and y values to generate
+    a best-fit parabola, and return a tuple of the two x-values in increasing order at which the parabola intersects the x-axis."""
+    x_values = []
+    y_values = []
+    with open(filename, 'r') as myfile:
+        thefile = csv.DictReader(myfile)
+        for row in thefile:
+            x_values.append(float(row['x']))
+            y_values.append(float(row['y']))
+    polyfit = np.polynomial.Polynomial.fit(x_values, y_values, 2)
+    coeffs = polyfit.convert().coef
+    a=coeffs[2]
+    b=coeffs[1]
+    c=coeffs[0]
+    root1=(-b+np.sqrt(b**2-4*a*c))/(2*a)
+    root2=(-b-np.sqrt(b**2-4*a*c))/(2*a)
+    return tuple(sorted([root1, root2]))
+check.within("messy", find_sites('messy-space.csv'), (-11.0, 4.0), 0.5)
+check.within("tidy", find_sites('tidy-space.csv'), (1.0, 7.0), 0.0001)
+check.within("negative", find_sites('tidy-space-negative.csv'), (-7.0, -1.0), 0.0001)
+check.within("test", find_sites('test-space.csv'), (-3.4, 7.2), 0.0001)
+
+import check
+import matplotlib.pyplot as plt
+import csv
+import numpy as np
+def find_sites(filename: str) -> tuple[float, float]:
+    """When given a CSV file, filename, use its x-column and y-column data as x and y values to generate
+    a best-fit parabola, and return a tuple of the two x-values in increasing order at which the parabola intersects the x-axis."""
+    with open(filename, "r") as myfile:
+        data = csv.DictReader(myfile)
+        xvals = []
+        yvals = []
+        for row in data:
+            xvals.append(float(row["x"]))
+            yvals.append(float(row["y"]))
+        quadratic = np.polynomial.Polynomial.fit(xvals, yvals, 2)
+        coefficients = quadratic.convert().coef
+        a = coefficients[2]
+        b = coefficients[1]
+        c = coefficients[0]
+        root1 = (-b+np.sqrt(b**2-4*a*c))/(2*a)
+        root2 = (-b-np.sqrt(b**2-4*a*c))/(2*a)
+        roots = (root1, root2)
+        return roots
+        
+check.within("messy", find_sites('messy-space.csv'), (-11.0, 4.0), 0.5)
+check.within("tidy", find_sites('tidy-space.csv'), (1.0, 7.0), 0.0001)
+check.within("negative", find_sites('tidy-space-negative.csv'), (-7.0, -1.0), 0.0001)
+check.within("test", find_sites('test-space.csv'), (-3.4, 7.2), 0.0001)
