@@ -1,0 +1,42 @@
+import check
+import math
+def cubic(x: float) -> float:
+    """Calculate a certain cubic of x."""
+    return (x-8) * (x-9) * (x-12.345)
+check.within("cubic:0", cubic(0.0), - 8 * 9 * 12.345, 0.0001)
+check.within("cubic:1", cubic(13.0), 5 * 4 * 0.655, 0.0001)
+check.within("cubic:z0", cubic(8.0), 0.0, 0.0001)
+check.within("cubic:z0", cubic(9.0), 0.0, 0.0001)
+check.within("cubic:z0", cubic(12.345), 0.0, 0.0001)
+
+def find_zero(f: callable, x0: float, x1: float) -> float:
+    """Use the Bisection method to return a value x between x0 and x1 such that f(x) is within 0.0001 of 0."""
+    ydiff = abs(x0-x1)
+    midpoint = (x0+x1)/2
+    if f(midpoint)*f(x0)<= 0:
+        first_new_end = midpoint
+        while ydiff > 0.0001:
+            if f(first_new_end) * f(x0) <= 0:
+                x1 = first_new_end
+            else:
+                x0 = first_new_end
+            ydiff = abs(x0-x1)
+            first_new_end = (x0+x1)/2
+        return first_new_end
+    elif f(midpoint)*f(x1)<= 0:
+        second_new_end = midpoint
+        while ydiff > 0.0001:
+            if f(second_new_end)*f(x1)<= 0:
+                x0 = second_new_end
+            else:
+                x1 = second_new_end
+            ydiff = abs(x0 - x1)
+            second_new_end = (x0 + x1) / 2
+        return second_new_end
+check.within("c12.345", find_zero(cubic, 7.0, 15.0), 12.345, 0.0001)
+check.within("c12.345 close", cubic(find_zero(cubic, 7.0, 15.0)), 0.0, 0.0001)
+check.within("2pi", find_zero(math.sin, 4.0, 8.0), 2 * math.pi, 0.0001)
+check.within("2pi close", math.sin(find_zero(math.sin, 4.0, 8.0)), 0.0, 0.0001)
+check.within("zerotonine", find_zero(cubic, 0.0, 9.0), 9.0, 0.0001)
+check.within("eleventofifteen", find_zero(cubic, 11.5, 15.6), 12.345, 0.0001)
+check.within("stupidcos", find_zero(math.cos, 0.0, math.pi), math.pi/2, 0.0001)
