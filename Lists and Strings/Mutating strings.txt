@@ -1,0 +1,85 @@
+import check
+import math
+def add1(x: int) -> int:
+    """Return one more than x."""
+    return x + 1
+check.expect("add1:0", add1(-1), 0)
+check.expect("add1:42", add1(41), 42)
+
+def double(x: int) -> int:
+    """Return twice x."""
+    return x * 2
+check.expect("double:0", double(0), 0)
+check.expect("double:42", double(21), 42)
+
+def addbanana(u:str) -> str:
+    """Add 'banana' to the given string, u, and return the resulting concatenation."""
+    result = u + 'banana'
+    return result
+check.expect("banana1", addbanana('help'), 'helpbanana')
+check.expect("banana2", addbanana('grape'), 'grapebanana')
+
+def stringplusnumber(value:any) -> str:
+    """If the value is a string, add the string '2' and return its new value. If the value is not a string, add
+    the string 'words' and return its new value."""
+    if value == str(value):
+        return '2'+value
+    else:
+        return str(value)+'words'
+check.expect("splusn_test1", stringplusnumber('hippo'), '2hippo')
+check.expect("splusn_test2", stringplusnumber(54), '54words')
+
+## Define mutate_map here.
+def mutate_map(f:callable, lst:list[any]) -> None:
+    """Mutates the given list, lst, based on the function, f, that is given."""
+    for index in range(len(lst)):
+            lst[index] = f(lst[index])
+    print(lst)
+test_L0a = [6,67,11]
+check.expect("m:0r", mutate_map(add1, test_L0a), None) # Check return
+check.expect("m:0m", test_L0a, [7,68,12])              # Check mutation
+
+test_L1a = [2,4,6,0,1]
+check.expect("m:0r", mutate_map(double, test_L1a), None)
+check.expect("m:0m", test_L1a, [4,8,12,0,2])
+
+test_L2a = [0.0, math.pi/2, math.pi]
+check.expect("n:2r", mutate_map(math.sin, test_L2a), None)
+check.within("n:2m", test_L2a, [0.0, 1.0, 0.0], 0.001)
+
+test_L3a = ['number', 'happy_string', 'red']
+check.expect("testl3a", mutate_map(addbanana, test_L3a), None)
+check.expect("testl3a", test_L3a, ['numberbanana', 'happy_stringbanana','redbanana'])
+
+test_L4a = ['oranges', 37, '901']
+check.expect("testl4a", mutate_map(stringplusnumber, test_L4a), None)
+check.expect("testl4a", test_L4a, ['2oranges', '37words', '2901'])
+
+## Define no_mutate_map here.
+
+def no_mutate_map(g:callable, lst:list[any]) -> list:
+    """When given a function, g, transform the values in lst by g and return a new list."""
+    not_mutation = []
+    for item in lst:
+        not_mutation.append(g(item))
+    return not_mutation
+
+test_L0b = [6,67,11]
+check.expect("n:0r", no_mutate_map(add1, test_L0b), [7,68,12]) # Check return
+check.expect("n:0m", test_L0b, [6,67,11])                      # Check mutation
+
+test_L1b = [2,4,6,0,1]
+check.expect("n:1r", no_mutate_map(double, test_L1b), [4,8,12,0,2])
+check.expect("n:1m", test_L1b, [2,4,6,0,1])
+
+test_L2b = [0.0, math.pi/2, math.pi]
+check.within("n:2r", no_mutate_map(math.sin, test_L2b), [0.0, 1.0, 0.0], 0.001)
+check.within("n:2m", test_L2b, [0.0, math.pi/2, math.pi], 0.0001)
+
+test_L3b = ['number', 'happy_string', 'red']
+check.expect("testl3b", no_mutate_map(addbanana, test_L3b), ['numberbanana', 'happy_stringbanana','redbanana'])
+check.within("test13b", test_L3b, ['number', 'happy_string', 'red'], 0.0001)
+
+test_L4b = ['oranges', 37, '901']
+check.expect("testl4b", no_mutate_map(stringplusnumber, test_L4b), ['2oranges', '37words', '2901']) 
+check.within("test14b", test_L4b, ['oranges', 37, '901'], 0.0001)
