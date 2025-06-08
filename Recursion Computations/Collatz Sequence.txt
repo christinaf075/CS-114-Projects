@@ -1,0 +1,17 @@
+import check
+def collatz(n:int) -> list[int]:
+    """Takes a value n and returns a list containing the Collatz sequence starting 
+    from there until 1."""
+    if n==1:
+        n = int(n)
+        return [n]
+    if n%2 == 0:
+        return [n]+collatz(int(n/2))
+    if n%2 != 0:
+        return [n]+collatz(int(n*3+1))
+
+check.expect("c0", collatz(17), [17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1])
+check.expect("c1", collatz(3), [3, 10, 5, 16, 8, 4, 2, 1])
+check.expect("c2", collatz(128), [128, 64, 32, 16, 8, 4, 2, 1])
+check.expect("c3", collatz(45), [45, 136, 68, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1])
+check.expect("c4", collatz(9), [9, 28, 14, 7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1])
