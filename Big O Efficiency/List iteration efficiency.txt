@@ -1,0 +1,29 @@
+import check
+def slowfunc(L: list[int]) -> int:
+    """Take a list L and remove the first item, square this value and append it to L
+    for i amount of times where i is the length of the L. Return the ith value of L
+    where i is the remainder of L divided by 2."""
+    for i in range(len(L)):
+        L.append(L.pop(0) ** 2)
+
+        for j in range(len(L) + 1):
+            thing = []
+            for item in L:
+                thing.append(item)
+    return L[len(L) // 2]
+check.expect("what", slowfunc([1,2,3]), 4)
+check.expect("maybe?", slowfunc([4, 5, 23, 544, 20]), 529)
+def fastfunc(L: list[int]) -> int:
+    """Take a list L and do what slowfunc does but in O(n) running time."""
+    for item in L:
+        numbers = L[0]**2
+        L= L[1:]
+        L.append(numbers)
+        
+        for j in range(len(L) + 1):
+            thing = []
+            for item in L:
+                thing.append(item)
+    return L[len(L) // 2] 
+check.expect("hmm", fastfunc([1,2,3]), 4)
+check.expect("HMM?", fastfunc([4, 5, 23, 544, 20]), 529)
