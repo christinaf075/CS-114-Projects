@@ -1,0 +1,40 @@
+import check
+
+# def viazovska(nums: list[int]) -> list[int]:
+#     """Do what it does with nums."""
+#     answer = []
+#     while nums != []:
+#         last = nums.pop()
+#         if last % 2 == 0:
+#             answer.append(last // 2)
+#         else:
+#             answer.append(3 * last + 1)
+#     return answer
+
+# check.expect("A0", viazovska([0]), [0])
+# mylist = [0]
+# check.expect("A1", viazovska(mylist), [0])
+# check.expect("A1m", mylist, [])
+# check.expect("A2", viazovska(mylist), [])
+# check.expect("help", viazovska([1,2,3]), [10,1,4])
+
+def viazovska_recursive(nums: list[int], answer: list[any]=None) -> list[int]:
+    """Do the same thing that viazovska does with nums and answer but using recursion only."""
+    if answer == None:
+        answer = []
+    if nums != []:
+        last = nums.pop()
+        if last%2 == 0:
+            answer.append(last//2)
+        else:
+            answer.append(3*last+1)
+        return viazovska_recursive(nums, answer)
+    else:
+        return answer
+check.expect("phonyA0", viazovska_recursive([0]), [0])
+mylist = [0]
+check.expect("phonyA1", viazovska_recursive(mylist), [0])
+check.expect("phonyA1m", mylist, [])
+check.expect("phonyA2", viazovska_recursive(mylist), [])
+check.expect("real_help", viazovska_recursive([1,2,3]), [10,1,4])
+check.expect("testplease", viazovska_recursive([87,5,900,4]), [2, 450, 16, 262])
