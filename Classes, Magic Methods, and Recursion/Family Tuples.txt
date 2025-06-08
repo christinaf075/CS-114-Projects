@@ -1,0 +1,36 @@
+import check
+FT = "str | tuple['FT', 'FT']"
+def fractal_tuple(depth: int, name: str) -> FT:
+    """Return a FT containing tuples with given depth, which are the children's names created by adding
+    L or R to the parent's name."""
+    if depth == 0:
+        return name
+    elif depth > 0:
+        new_tuple = (fractal_tuple(depth-1,name+"L"), fractal_tuple(depth-1, name+"R"))
+    return new_tuple
+check.expect("FT0", fractal_tuple(0, "w"), "w")
+check.expect("FT1", fractal_tuple(1, "x"), ("xL", "xR"))
+check.expect("FT2", fractal_tuple(2, "y"), (("yLL", "yLR"),("yRL", "yRR")))
+check.expect("FT2", fractal_tuple(3, "z"),
+             ((("zLLL", "zLLR"),("zLRL", "zLRR")),(("zRLL", "zRLR"),("zRRL", "zRRR"))))
+
+FL = "str | list['FL']"
+def fractal_list(depth: int, degree: int, name: str) -> FL:
+    """Return a FL containing lists with given depth, where each list has a degree number of children
+    that are named by adding its index to the parent's name."""
+    if depth == 0:
+        return name
+    else:
+        children = []
+        for index in range(degree):
+            child_name = name+ "-" + str(index)
+            children.append(fractal_list(depth-1, degree, child_name))
+        return children
+check.expect("FL1", fractal_list(1, 4, "g"), ["g-0", "g-1", "g-2", "g-3"])
+check.expect("FL2", fractal_list(2, 2, "h"),
+             [["h-0-0", "h-0-1"], ["h-1-0", "h-1-1"]])
+check.expect("FL2b", fractal_list(2, 3, "i"),
+             [["i-0-0", "i-0-1", "i-0-2"],
+              ["i-1-0", "i-1-1", "i-1-2"],
+              ["i-2-0", "i-2-1", "i-2-2"]])
+check.expect("FLstick", fractal_list(5, 1, 'j'), [[[[['j-0-0-0-0-0']]]]])
