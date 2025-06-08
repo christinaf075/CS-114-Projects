@@ -1,0 +1,14 @@
+import check
+import math
+def natural_log(x: float, total:float=0.0, i: int=1, sign: int=1) -> float:
+    """Estimate the log of x using recursion, using initial values of total, i, and sign 
+    to approximate using Taylor series. Requires: 0 < x < 2."""
+    if i == 800:
+        return total
+    else:
+        total = total + sign * (x-1) ** i / i
+        return natural_log(x, total, i+1, -sign)
+    
+check.within("ln(2.0)", natural_log(1.99), math.log(1.99), 0.0001)
+check.within("ln(0.5)", natural_log(0.5), math.log(0.5), 0.0001)
+check.within("ln(0.01)", natural_log(0.01), math.log(0.01), 0.0001)
