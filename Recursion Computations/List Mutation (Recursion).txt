@@ -1,0 +1,24 @@
+import check
+def enkidu(nums: list[int], answer:list[int]=None, what:int=7) -> "Something":
+    """Do something?!? with nums using answer list and initial value of what."""
+    if answer == None:
+        answer = []
+    if nums == []:
+        nums.append(answer[0])
+        return nums
+    answer.append(len(nums) + what) 
+    what = what * 7 % 11 
+    last = nums.pop(7 ** len(nums) % len(nums))
+    answer[0] = answer[0] + len(nums) + last % 7
+    if last != 0 and last % 2 == 0:
+        nums.append(last // 7)
+    enkidu(nums,answer, what)
+banana = [6]
+orange = [2,3,4]
+happy_easter = [4,1,1,4]
+check.expect("something what??", enkidu(banana), None)
+check.expect("seriously", banana, [14])
+check.expect("orange", enkidu(orange), None)
+check.expect("oranges", orange, [23])
+check.expect("easter", enkidu(happy_easter), None)
+check.expect("easter", happy_easter, [28])
