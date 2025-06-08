@@ -1,0 +1,51 @@
+import ipycanvas
+import check
+canvas = ipycanvas.Canvas(width=600,height=600)
+
+## This draws a grid behind the fractals to clarify dimensions.
+canvas.stroke_style='gray'
+for i in range(0,1000,100):
+    canvas.stroke_line(i, 0, i, 1000)
+    canvas.stroke_line(0, i, 1000, i)
+
+def satellite_fractal(canvas: ipycanvas.Canvas, x0: float, y0: float, width: float, depth: float) -> None:
+    """Draw a block fractal with top-left coordinates at (x0,y0) with the given width and depth 
+    using canvas."""
+    if depth > 0: 
+        #base for two opposite squares
+        x1 = x0+width/4
+        y1 = y0+width/4
+        canvas.fill_rect(x1, y1, width/4)
+        x2 = x0+width/2
+        y2 = y0+width/2
+        canvas.fill_rect(x2, y2, width/4)
+        #topleft
+        x01 = x1+width/4
+        y01 = y1-width/4
+        satellite_fractal(canvas, x01, y01, width/4, depth-1)
+        #topright
+        x02 = x2+width/4
+        y02 = y2-width/4
+        satellite_fractal(canvas, x02, y02, width/4, depth-1)
+        #bottomleft
+        x03 = x1-width/4
+        y03 = y1+width/4
+        satellite_fractal(canvas, x03, y03, width/4, depth-1)
+        #bottom right
+        x04 = x2-width/4
+        y04 = y2+width/4
+        satellite_fractal(canvas, x04, y04, width/4, depth-1)
+## These draw 3 fractals.
+## Yours should look exactly the same as the picture shown in the assignment.
+with ipycanvas.hold_canvas():
+    canvas.fill_style = 'black'
+    check.expect("->None:0", satellite_fractal(canvas, 0, 0, 400, 5), None)
+
+    canvas.fill_style = 'blue'
+    check.expect("->None:1", satellite_fractal(canvas, 400, 300, 100, 2), None)
+
+    canvas.fill_style = 'purple'
+    check.expect("->None:2", satellite_fractal(canvas, 400, 400, 200, 2), None)
+check.expect("None", satellite_fractal(canvas, 0,0,0,0), None)
+check.expect("No", satellite_fractal(canvas, 10, 10, 0, 0), None)
+display(canvas)
