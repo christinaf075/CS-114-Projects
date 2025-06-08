@@ -1,0 +1,85 @@
+import check
+## We need the Family class definition:
+class Family:
+    """Store information about the Family of a person."""
+    name: str
+    children: list['Family']
+
+    def __init__(self, name: str, children: list['Family']):
+        self.name = name
+        self.children = children
+
+    def __repr__(self) -> str:
+        return "Family('{}', {})".format(self.name, self.children)
+   
+def farthest_child(fam: "Family") -> list[str]:
+    """When given a class, fam, return a list of strings containing the names of the family members and their
+    children in the order from the leaf to the root that has the farthest distance between them. If there
+    is an equal distance, return the one farthest to the left."""
+    if fam.children == []:
+        return [fam.name]
+    else:
+        longest_distance = 0
+        picking_farthest = []
+        root = [fam.name]
+        for children in fam.children:
+            path = farthest_child(children) + root
+            distance = len(path)
+            if distance > longest_distance:
+                longest_distance = distance
+                picking_farthest = [path]
+            elif distance == 0:
+                picking_farthest.append(path)
+        if picking_farthest:
+            return picking_farthest[0]
+check.expect("leaf", farthest_child(Family("Robb", [])), ["Robb"])
+check.expect("leaf", farthest_child(Family("Sansa", [])), ["Sansa"])
+
+tully = Family('Hoster',
+                 [Family('Lysa',
+                         [Family('Robin', [])]),
+                  Family('Edmure', []),
+                  Family('Catelyn',
+                         [Family('Robb', []),
+                          Family('Sansa', []),
+                          Family('Arya', []),
+                          Family('Bran', []),
+                          Family('Rickon', [])])])
+check.expect("tully", farthest_child(tully), ["Robin", "Lysa", "Hoster"])
+
+example1 = Family('Ann',
+                  [Family('Bob', [
+                      Family('Cy', [Family('Di',[]),
+                                    Family('Ed',[Family('Ollie', [])]),
+                                    Family('Fox',[])]),
+                      Family('Glen', [])]),
+                   Family('Hi', [
+                       Family('Io', [Family('Jo',[Family('Nat', [])]),
+                                     Family('Kim',[]),
+                                     Family('Li',[])]),
+                       Family('Mo', [])])])
+
+
+check.expect("ann", farthest_child(example1),
+             ["Ollie", "Ed", "Cy", "Bob", "Ann"])
+
+example3 = Family('Ann',
+                  [Family('Bob', [
+                      Family('Cy', [Family('Di',[]),
+                                    Family('Ed',[Family('Ollie', [])]),
+                                    Family('Fox',[])]),
+                      Family('Glen', [])]),
+                   Family('Hi', [
+                       Family('Io', [Family('Jo',[Family('Nat', [Family('Xavier',[])])]),
+                                     Family('Kim',[]),
+                                     Family('Li',[])]),
+                       Family('Mo', [])])])
+
+check.expect("ann", farthest_child(example3),
+             ['Xavier', 'Nat','Jo','Io', 'Hi', 'Ann'])
+seventeen_more_days = Family("Jesus", [Family("Noah", []), 
+        Family("Joseph", [Family("Andrew", []), Family("Abraham", [])])])
+                                                                                                        
+check.expect("17moredays", farthest_child(seventeen_more_days), ["Andrew", "Joseph", "Jesus"])
+luosifen = Family("Tobias", [Family("Snivellus", [Family("Sobbing", [Family("Help",[])])])])
+check.expect("luosifen", farthest_child(luosifen), ["Help", "Sobbing", "Snivellus", "Tobias"])
