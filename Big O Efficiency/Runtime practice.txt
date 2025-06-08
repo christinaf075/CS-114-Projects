@@ -1,0 +1,53 @@
+import check
+
+## Every function below can be described by one of these.
+## Set each value r1, r2, r3 to one one these.
+runtimes = ("1", "log n", "sqrt n", "n", "n**2", "n**3", "2**n")
+
+# def f1(L):
+#     ans = 1
+#     for x in [0, 1]:
+#         n = L.pop()
+#         if n % 2 == 0:
+#             ans = ans + f1(L)
+#         else:
+#             ans = ans * f1(L)
+#     return ans
+r1 = "n"
+e1 = """The slowest part of the code is the for loop and the recursive calls.
+The for loop only iterates twice, with a running time of O(1), and the recursive call has a running time of T(n-1) 
+since an element is popped from L."""
+
+check.expect("r1", r1 in runtimes, True)
+check.expect("e1", isinstance(e1, str), True)
+
+
+# def f2(n):
+#     if n > 0:
+#         if (n + 1) % 10 == 0:
+#             return True
+#         else:
+#             return f2(n // 2)
+#     return False
+
+r2 = "log n"
+e2 = """The second if statement involves operations that has a running time of O(1).
+The else statement includes recursive code that has a running time of T(n/2) since it is going to keep dividing by 2 
+and using its remainder as n until n=0. The total running time added together is O(log n)."""
+
+check.expect("r2", r2 in runtimes, True)
+check.expect("e2", isinstance(e2, str), True)
+
+# def f3(L):
+#     ans = 0
+#     while L != []:
+#         ans = ans + L.pop()
+
+#     return ans
+
+r3 = "n"
+e3 = """The slowest part of the code is the while loop, where it will iterate through n times, 
+n being the length of L until L is empty. Hence, the running time is O(n)."""
+
+check.expect("r3", r3 in runtimes, True)
+check.expect("e3", isinstance(e3, str), True)
